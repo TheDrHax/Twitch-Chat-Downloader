@@ -77,6 +77,11 @@ class Message(object):
 
         return ' '.join(words)
 
+    @staticmethod
+    def sort_badges(badge, badge_map_vals):
+        return (badge not in badge_map_vals,
+                list(badge_map_vals).index(badge) if badge in badge_map_vals else False)
+
     def __init__(self, comment):
         self.user = comment['commenter']['displayName']
 
@@ -88,7 +93,9 @@ class Message(object):
             max_count = settings['badges']['max_count']
             if max_count >= 1:
                 if len(badges) > max_count:
-                    badges = badges[0:max_count]
+                    sorted_badges = sorted(
+                        badges, key=lambda b: self.sort_badges(b, settings['badges']['map'].values()))
+                    badges = sorted_badges[0:max_count]
 
             self.badge = ''.join(badges)
         else:
