@@ -1,3 +1,4 @@
 requests
 progressbar2
 iso8601
+urllib3

@@ -3,7 +3,7 @@ from iso8601 import parse_date as parse8601
 from progressbar import ProgressBar
 from requests import Session
 from requests.adapters import HTTPAdapter
-from requests.packages.urllib3 import Retry
+from urllib3 import Retry
 
 from .settings import settings
 
