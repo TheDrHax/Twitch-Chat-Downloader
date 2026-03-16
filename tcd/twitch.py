@@ -214,8 +214,10 @@ class Messages(object):
             for comment in comments['edges']:
                 # Calculate more accurate offset
                 ts = parse8601(comment['node']['createdAt'])
-                precise_offset = (ts - self.created_at).total_seconds()
-                comment['node']['contentOffsetSeconds'] = precise_offset
+
+                if ts > self.created_at:
+                    precise_offset = (ts - self.created_at).total_seconds()
+                    comment['node']['contentOffsetSeconds'] = precise_offset
 
                 try:
                     msg = Message(comment['node'])
