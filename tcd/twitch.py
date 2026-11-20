@@ -81,20 +81,29 @@ class Message(object):
         self.user = comment['commenter']['displayName']
 
         if settings['badges']['enabled']:
-            badge_ids = [badge['setID']
-                         for badge in comment['commenter']['displayBadges']]
+            badges = dict(
+                (b['setID'], b['version'])
+                for b in comment['message']['userBadges']
+                if b['setID'] in settings['badges']['map']
+            )
 
-            badges = [val
-                      for key, val in settings['badges']['map'].items()
-                      if key in badge_ids]
+            # reorder by settings
+            badges = dict(
+                (k, badges[k])
+                for k in settings['badges']['map']
+                if k in badges
+            )
 
             max_count = settings['badges']['max_count']
-            if max_count >= 1:
-                if len(badges) > max_count:
-                    badges = badges[0:max_count]
 
-            self.badge = ''.join(badges)
+            self.badges = ';'.join(f'{k}={v}' for k, v in badges.items())
+            self.badge = ''.join(
+                settings['badges']['map'][set_id]
+                for i, set_id in enumerate(badges)
+                if i < max_count and max_count > 0
+            )
         else:
+            self.badges = ''
             self.badge = ''
 
         group_prefs = settings.get('group_repeating_emotes')
@@ -155,9 +164,6 @@ class Messages(object):
                                 commenter {{
                                     displayName
                                     login
-                                    displayBadges(channelID: {self.creator_id}) {{
-                                        setID
-                                    }}
                                 }}
                                 createdAt
                                 contentOffsetSeconds
@@ -166,6 +172,10 @@ class Messages(object):
                                         text
                                     }}
                                     userColor
+                                    userBadges {{
+                                        setID
+                                        version
+                                    }}
                                 }}
                             }}
                         }}

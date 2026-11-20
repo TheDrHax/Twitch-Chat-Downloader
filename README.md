@@ -74,6 +74,19 @@ To override default options, run `python -m tcd --generate-config` and edit gene
 | `srt` | SubRip |
 | `irc` | IRC-style log |
 
+## SSA/ASS Events Line Format
+
+The `ssa_events_line_format` option controls how each chat message is written as an SSA/ASS `Dialogue` event (used by the `ass`/`ssa` formats). It must follow the SSA events `Format:` line declared by `ssa_events_format`, and may contain these placeholders:
+
+| Placeholder | Description |
+| ----------- | ----------- |
+| `{start}` | Start time |
+| `{end}` | End time |
+| `{user}` | Colored username. |
+| `{message}` | Message text |
+| `{badge}` | First `max_count` badge symbols (see the `badges` option). |
+| `{badges}` | All badges formatted as `moderator=1;subscriber=6`. |
+
 ## Notes
 
 - Empty messages means the user has been timed out. There's no known way to get these.

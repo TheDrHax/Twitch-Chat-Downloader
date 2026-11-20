@@ -100,8 +100,10 @@ class SubtitlesASS(Subtitle):
             start=self.ftime(offset),
             end=self.ftime(offset + self._duration(comment.message)),
             user=self._color(comment.user, color),
-            message=self.wrap(comment.user, comment.message)
-        ))
+            message=self.wrap(comment.user, comment.message),
+            badge=comment.badge,
+            badges=comment.badges,
+        ).replace('  ', ' '))
 
 
 class SubtitlesSRT(Subtitle):
